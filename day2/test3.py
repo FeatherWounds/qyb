@@ -3,11 +3,17 @@ import re
 
 
 def natural_sort_key(s):
-    """
-    生成自然排序键，用于实现类似Windows资源管理器的排序
-    """
-    return [int(text) if text.isdigit() else text.lower()
-            for text in re.split('([0-9]+)', s)]
+    """实现特定排序规则：数字按自然排序，但带前导零的数字排在相同值的数字之前"""
+    def convert(text):
+        if text.isdigit():
+            num_val = int(text)
+            # 如果是以0开头的数字，返回一个特殊的元组使其排在普通数字之前
+            if text.startswith('0') and len(text) > 1:
+                return (num_val - 0.5, text)
+            return (num_val, text)
+        return text.lower()
+
+    return [convert(p) for p in re.split('([0-9]+)', s)]
 
 
 def rename_images_with_names(folder_path, names_file):
@@ -57,8 +63,8 @@ def rename_images_with_names(folder_path, names_file):
 # 使用示例
 if __name__ == "__main__":
     # 替换为你的实际路径
-    images_folder = input("请输入图片文件夹路径: ").strip('"')
-    names_file = input("请输入名字文本文件路径: ").strip('"')
+    images_folder = input("请输入图片文件夹路径: ").strip('"')#请输入图片文件夹路径: C:\Users\FeatherWounds\OneDrive\桌面\新建文件夹
+    names_file = input("请输入名字文本文件路径: ").strip('"')#C:\Users\FeatherWounds\OneDrive\桌面\新建文本文档.txt
 
     rename_images_with_names(images_folder, names_file)
 
