@@ -14,7 +14,7 @@ def natural_sort_key(s):
     return [convert(p) for p in re.split('([0-9]+)', s)]
 
 def rename_images():
-    # 设置文件夹路径
+    # 设置文件路径
     folder_path =r"C:\Users\FeatherWounds\OneDrive\桌面\新建文件夹"
     txt_path = r"C:\Users\FeatherWounds\OneDrive\桌面\新建文本文档.txt"
 
