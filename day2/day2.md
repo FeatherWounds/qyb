@@ -4,207 +4,123 @@
 
 ### 一、函数与模块
 
-#### 1.函数定义与调用
-```python
-# 判断回文数
-def is_palindrome(num):
-    num_str = str(num)
-    return num_str == num_str[::-1]
+#### 1.1 函数基础
+- 函数是组织好的、可重复使用的代码块，用于实现单一或相关联功能  
+- 使用`def`关键字定义函数，后接函数名和圆括号`()`  
+- 函数可以接收参数，也可以没有参数  
+- 通过`return`语句返回值，没有return语句的函数返回`None`  
 
-print("121是回文数吗?", is_palindrome(121))  # True
-print("123是回文数吗?", is_palindrome(123))  # False
-print()
-```
+#### 1.2 参数传递
+- **位置参数**：按照参数位置顺序传递  
+- **关键字参数**：通过参数名指定值  
+- **默认参数**：定义函数时为参数指定默认值  
+- **可变参数**：  
+  - `*args`接收任意数量的位置参数  
+  - `**kwargs`接收任意数量的关键字参数  
 
-#### 2.模块与导入
-```python
-# 创建模块
-def area(length, width):
-    return length * width
-
-def perimeter(length, width):
-    return 2 * (length + width)
-
-from test1 import area, perimeter
-
-print("矩形面积:", area(5, 3))      # 15
-print("矩形周长:", perimeter(5, 3))  # 16
-```
+#### 1.3 模块化编程
+- 模块是一个包含Python定义和语句的文件，文件名就是模块名加上`.py`后缀  
+- 使用`import`语句导入模块  
+- 可以使用`from...import...`导入特定功能  
+- 模块可以避免命名冲突，提高代码可维护性  
 
 ### 二、面向对象编程基础
 
-#### 1.属性与方法
-```python
-# 定义Car类
-class Car:
-    def __init__(self, brand, speed=0):
-        self.brand = brand  # 品牌
-        self.speed = speed  # 速度
+#### 2.1 类与对象
+- **类(Class)**：创建对象的模板，描述了对象的属性和方法  
+- **对象(Object)**：类的实例，具有类定义的属性和方法  
+- 使用`class`关键字定义类，类名通常采用驼峰命名法  
 
-    def accelerate(self, m):
-        """加速方法，m次每次增加10"""
-        self.speed += 10 * m
-        return self
+#### 2.2 类的基本特性
+- 构造函数`__init__()`在创建对象时自动调用  
+- 实例方法第一个参数通常是`self`，表示对象本身  
+- **类变量**：所有实例共享的变量  
+- **实例变量**：每个实例独有的变量  
 
-    def brake(self, n):
-        """刹车方法，n次每次减少10，不低于0"""
-        self.speed = max(0, self.speed - 10 * n)
-        return self
+#### 2.3 面向对象三大特性
+1. **封装**：将数据和方法包装在类中，隐藏实现细节  
+2. **继承**：子类继承父类的属性和方法，实现代码复用  
+3. **多态**：不同类的对象对同一消息做出不同响应  
 
-    def __str__(self):
-        return f"{self.brand}汽车，当前速度: {self.speed}"
-```
+### 三、文件操作与异常处理
 
-#### 2.继承：子类继承父类的属性和方法
-```python
-# 定义ElectricCar子类
-class ElectricCar(Car):
-    def __init__(self, brand, speed=0, battery=50):
-        super().__init__(brand, speed)
-        self.battery = battery  # 电量
+#### 3.1 文件操作
+- 使用`open()`函数打开文件，指定文件名和模式(`r`/`w`/`a`等)  
+- 操作完成后必须调用`close()`方法关闭文件  
+- **推荐**使用`with`语句自动管理文件资源  
+- **常用文件读取方法**：  
+  - `read()`  
+  - `readline()`  
+  - `readlines()`  
+- **常用文件写入方法**：  
+  - `write()`  
+  - `writelines()`  
 
-    def charge(self, times=1):
-        """充电方法，每次增加20，不超过100"""
-        self.battery = min(100, self.battery + 20 * times)
-        return self
+#### 3.2 异常处理
+- 异常是程序执行过程中出现的错误或意外情况  
+- 使用`try...except...`结构捕获和处理异常  
+- `finally`子句无论是否发生异常都会执行  
+- 可以自定义异常类，继承自`Exception`类  
+- **常见的异常类型**：  
+  - `ValueError`  
+  - `TypeError`  
+  - `FileNotFoundError`  
 
-    def __str__(self):
-        return f"{self.brand}电动汽车，当前速度: {self.speed}，电量: {self.battery}%"
+### 四、模块与标准库
 
+#### 4.1 Python标准库
+- Python自带丰富的标准库，提供各种功能  
+- **常用标准库**：  
+  - `os`模块：操作系统接口  
+  - `sys`模块：系统相关功能  
+  - `math`模块：数学运算  
+  - `datetime`模块：日期时间处理  
+  - `random`模块：生成随机数  
+  - `json`模块：JSON数据处理  
 
-# 测试ElectricCar
-my_electric = ElectricCar("特斯拉")
-print(my_electric)  # 初始状态
+#### 4.2 第三方模块
+- 通过`pip`工具安装第三方模块  
+- **常用的第三方模块**：  
+  - `numpy`  
+  - `pandas`  
+  - `requests`  
+- 虚拟环境可以隔离不同项目的依赖  
 
-my_electric.accelerate(2).charge(3)  # 加速2次，充电3次
-print(my_electric)  # 速度20，电量110会被限制为100
-
-my_electric.brake(1)  # 刹车1次
-print(my_electric)  # 速度10，电量100
-```
-### 三、文件操作与异常处理和模块与标准库
-```python
-# 批量更改图片文件名为txt文件中里面的名字，注意顺序一致
-import os
-import re
-
-def natural_sort_key(s):
-    def convert(text):
-        if text.isdigit():
-            num_val = int(text)
-            # 如果是以0开头的数字，返回一个特殊的元组使其排在普通数字之前
-            if text.startswith('0') and len(text) > 1:
-                return (num_val - 0.5, text)
-            return (num_val, text)
-        return text.lower()
-
-    return [convert(p) for p in re.split('([0-9]+)', s)]
-
-def rename_images():
-    # 设置文件路径
-    folder_path =r"C:\Users\FeatherWounds\OneDrive\桌面\新建文件夹"
-    txt_path = r"C:\Users\FeatherWounds\OneDrive\桌面\新建文本文档.txt"
-
-    # 读取txt文件中的新名称
-    with open(txt_path, 'r', encoding='utf-8') as f:
-        new_names = [name.strip() for name in f.readlines() if name.strip()]
-
-    # 获取所有图片文件并按Windows自然顺序排序
-    image_files = [f for f in os.listdir(folder_path) if f.endswith('.png')]
-    image_files.sort(key=natural_sort_key)  # 使用自然排序
-
-    # 确保文件数量匹配
-    if len(image_files) != len(new_names):
-        print(f"警告：图片数量({len(image_files)})与名字数量({len(new_names)})不匹配！")
-        return
-
-    # 首先显示排序和重命名预览
-    print("\n=== 文件重命名预览 ===")
-    for i, (old_name, new_name) in enumerate(zip(image_files, new_names), 1):
-        print(f"[{i}] {old_name} -> {new_name}.png")
-
-    # 询问用户是否继续
-    user_input = input("\n请确认排序是否正确？(y/n): ")
-    if user_input.lower() != 'y':
-        print("操作已取消")
-        return
-
-    # 执行实际的重命名操作
-    print("\n=== 开始重命名文件 ===")
-    for i, (old_name, new_name) in enumerate(zip(image_files, new_names), 1):
-        old_path = os.path.join(folder_path, old_name)
-        new_path = os.path.join(folder_path, f"{new_name}.png")
-
-        try:
-            os.rename(old_path, new_path)
-            print(f"[{i}] 成功: {old_name} -> {new_name}.png")
-        except Exception as e:
-            print(f"[{i}] 失败: {old_name} -> {new_name}.png")
-            print(f"错误信息: {str(e)}")
-
-if __name__ == "__main__":
-    rename_images()
-```
 ## numpy
 
-### 1.数组创建与属性分析
-```python
-import numpy as np
-#创建3x4的二维数组
-arr = np.arange(1, 13).reshape(3, 4)
-print("原始数组:\n", arr)
+### 一、数组创建与基础操作
 
-#任务1：打印数组属性
-print("\n1. 数组属性:")
-print("形状:", arr.shape)
-print("维度:", arr.ndim)
-print("数据类型:", arr.dtype)
+#### 1. 数组创建核心方法
+- `np.arange()` 是创建连续数值数组的利器，通过指定起始值、终止值和步长生成序列
+- `reshape()` 方法在不改变数据的情况下重组数组结构，需注意新形状的元素总数必须与原数组一致
 
-#任务2：元素乘以2
-print("\n2. 元素乘以2:\n", arr * 2)
+#### 2. 重要数组属性
+- **shape**：元组形式返回各维度大小，如(3,4)表示3行4列
+- **ndim**：直观显示数组维度（标量0维，向量1维，矩阵2维）
+- **dtype**：了解数组元素的数据类型对内存优化和类型转换至关重要
 
-#任务3：重塑为4x3
-reshaped_arr = arr.reshape(4, 3)
-print("\n3. 重塑后的数组(4x3):\n", reshaped_arr)
-```
-### 2.数组索引与切片
-```python
-import numpy as np
-# 创建4x4数组
-array = np.array([[1, 2, 3, 4], 
-                 [5, 6, 7, 8], 
-                 [9, 10, 11, 12], 
-                 [13, 14, 15, 16]])
+### 二、索引与切片机制
 
-# 任务1：提取第2行(索引为1)
-print("1. 第2行:\n", array[1, :])
+#### 1. 基础索引规则
+- 二维数组使用`[row, col]`格式访问元素，索引从0开始
+- 冒号`:`表示选择该维度所有元素，`start:end`可指定范围（左闭右开）
 
-# 任务2：提取第3列(索引为2)
-print("\n2. 第3列:\n", array[:, 2])
+#### 2. 高级切片技巧
+- 同时指定行列范围时（如`array[0:2,1:3]`），先确定行范围再确定列范围
+- 布尔索引（如`array[array>10]`）能快速实现条件筛选，结合赋值操作可批量修改元素
 
-# 任务3：提取子数组(行1-2, 列2-3)
-print("\n3. 子数组:\n", array[0:2, 1:3])
+### 三、广播机制与运算
 
-# 任务4：条件替换
-array[array > 10] = 0
-print("\n4. 修改后的数组:\n", array)
-```
-### 3.数组运算与广播
-```python
-import numpy as np
-# 创建数组A和B
-A = np.arange(1, 7).reshape(3, 2)
-B = np.array([10, 20])
+#### 1. 广播规则本质
+当操作两个数组时，NumPy会从最后一个维度开始向前逐元素比较：
+1. 维度相等或其中一个为1时可以进行广播
+2. 缺失的维度会自动补1
 
-print("数组A:\n", A)
-print("数组B:\n", B)
+#### 2. 典型运算场景
+- **算术运算**：`+ - * /`等运算符在相同形状数组间执行逐元素操作
+- **广播运算**：形状不同的数组（如(3,2)和(2,)）会自动扩展后进行运算
+- **矩阵运算**：`np.dot()`实现真正的矩阵乘法，注意第一个数组的列数需等于第二个数组的行数
 
-# 任务1：逐元素相加
-print("\n1. A + B:\n", A + B)
-
-# 任务2：逐元素相乘
-print("\n2. A * B:\n", A * B)
-
-# 任务3：每行与B的点积
-print("\n3. 点积结果:\n", np.dot(A, B))
-```
+## 学习心得
+通过今天的学习，我对Python的函数模块化编程和面向对象思想有了更深入的理解。函数和模块让代码更加结构化，面向对象编程则提供了更接近现实世界的思维方式。文件操作和异常处理是实际开发中必不可少的技能，而熟练使用标准库能大大提高开发效率。下一步需要多练习实际案例，巩固这些基础知识。
+NumPy 通过视图(view)机制实现高效的内存管理，切片操作返回的是原数据的"观察窗口"而非新数据。这种设计既节省内存，又保持了数据一致性。
