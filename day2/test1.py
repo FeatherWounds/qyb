@@ -29,5 +29,5 @@ def perimeter(length, width):
     return 2 * (length + width)
 
 print("模拟导入演示:")
-print("矩形面积:", area(8, 4))
-print("矩形周长:", perimeter(8, 4))
+print("矩形面积:", area(9, 4))
+print("矩形周长:", perimeter(9, 4))
