@@ -1,9 +1,7 @@
 import os
 import re
 
-
 def natural_sort_key(s):
-    """实现特定排序规则：数字按自然排序，但带前导零的数字排在相同值的数字之前"""
     def convert(text):
         if text.isdigit():
             num_val = int(text)
@@ -15,58 +13,47 @@ def natural_sort_key(s):
 
     return [convert(p) for p in re.split('([0-9]+)', s)]
 
+def rename_images():
+    # 设置文件夹路径
+    folder_path =r"C:\Users\FeatherWounds\OneDrive\桌面\新建文件夹"
+    txt_path = r"C:\Users\FeatherWounds\OneDrive\桌面\新建文本文档.txt"
 
-def rename_images_with_names(folder_path, names_file):
-    # 读取名字列表
-    with open(names_file, 'r', encoding='utf-8') as f:
-        names = [line.strip() for line in f if line.strip()]
+    # 读取txt文件中的新名称
+    with open(txt_path, 'r', encoding='utf-8') as f:
+        new_names = [name.strip() for name in f.readlines() if name.strip()]
 
-    # 获取文件夹中所有图片文件
-    files = os.listdir(folder_path)
-    image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp']
-    image_files = [f for f in files if os.path.splitext(f)[1].lower() in image_extensions]
+    # 获取所有图片文件并按Windows自然顺序排序
+    image_files = [f for f in os.listdir(folder_path) if f.endswith('.png')]
+    image_files.sort(key=natural_sort_key)  # 使用自然排序
 
-    # 使用自然排序（不使用natsort库）
-    image_files.sort(key=natural_sort_key)
+    # 确保文件数量匹配
+    if len(image_files) != len(new_names):
+        print(f"警告：图片数量({len(image_files)})与名字数量({len(new_names)})不匹配！")
+        return
 
-    # 检查名字数量是否足够
-    if len(names) < len(image_files):
-        print(f"警告: 名字数量({len(names)})少于图片数量({len(image_files)})")
-        # 只处理有对应名字的图片
-        image_files = image_files[:len(names)]
+    # 首先显示排序和重命名预览
+    print("\n=== 文件重命名预览 ===")
+    for i, (old_name, new_name) in enumerate(zip(image_files, new_names), 1):
+        print(f"[{i}] {old_name} -> {new_name}.png")
 
-    # 重命名文件
-    for i, (old_name, new_name) in enumerate(zip(image_files, names), 1):
-        # 获取文件扩展名
-        ext = os.path.splitext(old_name)[1]
+    # 询问用户是否继续
+    user_input = input("\n请确认排序是否正确？(y/n): ")
+    if user_input.lower() != 'y':
+        print("操作已取消")
+        return
 
-        # 构造新文件名（保留原扩展名）
-        new_filename = f"{new_name}{ext}"
-
-        # 文件路径
+    # 执行实际的重命名操作
+    print("\n=== 开始重命名文件 ===")
+    for i, (old_name, new_name) in enumerate(zip(image_files, new_names), 1):
         old_path = os.path.join(folder_path, old_name)
-        new_path = os.path.join(folder_path, new_filename)
+        new_path = os.path.join(folder_path, f"{new_name}.png")
 
-        # 检查是否有重名文件
-        if os.path.exists(new_path):
-            print(f"{i}. 跳过: {new_filename} 已存在")
-            continue
-
-        # 重命名文件
         try:
             os.rename(old_path, new_path)
-            print(f"{i}. 重命名: {old_name} → {new_filename}")
+            print(f"[{i}] 成功: {old_name} -> {new_name}.png")
         except Exception as e:
-            print(f"{i}. 错误: 无法重命名 {old_name} - {str(e)}")
+            print(f"[{i}] 失败: {old_name} -> {new_name}.png")
+            print(f"错误信息: {str(e)}")
 
-
-# 使用示例
 if __name__ == "__main__":
-    # 替换为你的实际路径
-    images_folder = input("请输入图片文件夹路径: ").strip('"')#请输入图片文件夹路径: C:\Users\FeatherWounds\OneDrive\桌面\新建文件夹
-    names_file = input("请输入名字文本文件路径: ").strip('"')#C:\Users\FeatherWounds\OneDrive\桌面\新建文本文档.txt
-
-    rename_images_with_names(images_folder, names_file)
-
-    print("\n操作完成！按Enter键退出...")
-    input()
+    rename_images()
