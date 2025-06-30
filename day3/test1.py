@@ -1,41 +1,47 @@
 import requests
-from bs4 import BeautifulSoup
+import re
 
 
 def get_douban_chart_top_movies():
     # 豆瓣电影排行榜URL
     url = 'https://movie.douban.com/chart'
 
-    # 设置请求头，模拟浏览器访问
+    # 设置请求头
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Referer': 'https://movie.douban.com/'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
 
     try:
         # 发送HTTP请求
         response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status()  # 检查请求是否成功
+        response.raise_for_status()
 
-        # 解析HTML内容
-        soup = BeautifulSoup(response.text, 'html.parser')
+        # 获取网页内容
+        html = response.text
 
-        # 查找排行榜中的电影项目
+        # 定义正则表达式模式
+        movie_pattern = re.compile(
+            r'<div class="pl2">\s*<a href="(.*?)".*?>(.*?)</a>.*?'
+            r'<span class="rating_nums">(.*?)</span>',
+            re.DOTALL
+        )
+
+        # 查找所有匹配项
+        matches = movie_pattern.findall(html)
+
+        # 处理结果
         movies = []
-        items = soup.find_all('div', class_='pl2', limit=10)  # 限制获取前10个
-
-        for item in items:
-            # 提取电影名称（去除多余空格和换行）
-            name = item.a.text.strip().replace('\n', '').replace(' ', '')
-            # 提取详情页链接
-            link = item.a['href']
-            # 提取评分
-            rating = item.find('span', class_='rating_nums').text if item.find('span', class_='rating_nums') else '暂无评分'
+        for i, match in enumerate(matches[:10], 1):  # 只取前10个
+            link = match[0].strip()
+            name = re.sub(r'\s+', '', match[1])  # 去除所有空白字符
+            name = re.sub(r'<.*?>', '', name)  # 去除HTML标签
+            rating = match[2].strip()
 
             movies.append({
+                'rank': i,
                 'name': name,
-                'link': link,
-                'rating': rating
+                'rating': rating,
+                'link': link
             })
 
         return movies
@@ -52,7 +58,7 @@ def get_douban_chart_top_movies():
 top_movies = get_douban_chart_top_movies()
 if top_movies:
     print("豆瓣电影排行榜Top10:")
-    for i, movie in enumerate(top_movies, 1):
-        print(f"{i}. {movie['name']} | 评分: {movie['rating']} | 链接: {movie['link']}")
+    for movie in top_movies:
+        print(f"{movie['rank']}. {movie['name']} | 评分: {movie['rating']} | 链接: {movie['link']}")
 else:
     print("未能获取电影列表")
