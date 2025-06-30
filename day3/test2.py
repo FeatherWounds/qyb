@@ -67,6 +67,6 @@ def download_images():
     finally:
         print("下载任务完成")
 
-
+# 下载到D盘的images
 if __name__ == "__main__":
     download_images()
